@@ -2,9 +2,14 @@ using System.Collections;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using System;
+using UnityEngine.UI;
 
 public class Interview : MonoBehaviour
-{
+{   
+    [SerializeField] Slider timerSlider;
+
+    [SerializeField] GameObject head;
 
     [SerializeField] DialogueReader dialogueReader;
 
@@ -13,6 +18,8 @@ public class Interview : MonoBehaviour
     [SerializeField] int currentDialogue = 0;
 
     [SerializeField] float speakingPause = 3;
+
+    [SerializeField] FacialExpressionScanner facialExpressionScanner;
 
     Coroutine interviewTextCoroutine = null;
     Coroutine endTextCoroutine = null;
@@ -41,35 +48,23 @@ public class Interview : MonoBehaviour
 
         if(timerStart)
         {
+            // Calculate normalized value (starts at 1, goes to 0)
+            timerSlider.value = (timerLength - timer) / timerLength;
             timer += Time.deltaTime;
-
-            // placeholder for testing
-            // add input for speeding up
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                currentEmotion = Dialogue.Emotion.Happy;
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                currentEmotion = Dialogue.Emotion.Sad;
-            }
-            else if (Input.GetKeyDown(KeyCode.W))
-            {
-                currentEmotion = Dialogue.Emotion.Angry;
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
-            {
-                currentEmotion = Dialogue.Emotion.Shocked;
-            }
-
-            //
 
             if (timer >= timerLength)
             {
                 //check if emotion is done here
                 timerStart = false;
-                EmotionCheck(currentEmotion);
 
+                if (Enum.TryParse(facialExpressionScanner.currentEmotion, true, out Dialogue.Emotion emotion))
+                {
+                    EmotionCheck(emotion);
+                }
+                else
+                {
+                    EmotionCheck(Dialogue.Emotion.Crazy);
+                }
             }
         }
  
@@ -102,8 +97,18 @@ public class Interview : MonoBehaviour
 
     void StartTimer()
     {
+        // Use 0 to 1 range for the slider
+        timerSlider.minValue = 0;
+        timerSlider.maxValue = 1;
+        timerSlider.value = 1;
+        
+        head.SetActive(true);
         timer = 0;
         timerLength = dialogueArray[currentDialogue].interviewTimer;
+        
+        // Safety check to avoid division by zero
+        if (timerLength <= 0) timerLength = 0.1f;
+        
         timerStart = true;
     }
 
@@ -113,13 +118,15 @@ public class Interview : MonoBehaviour
         dialogueReader.TypeText(toread);
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
+        yield return new WaitForSeconds(speakingPause);
         if(dialogueArray[currentDialogue].isInterviewQuestion)
         {
             StartTimer();
         }
         else if(dialogueArray[currentDialogue].dialogueEnd == false)
         {
-            StartCoroutine(DialogueWaitCoroutine());
+            //StartCoroutine(DialogueWaitCoroutine());
+            NextDialogue();
         }
     }
 
