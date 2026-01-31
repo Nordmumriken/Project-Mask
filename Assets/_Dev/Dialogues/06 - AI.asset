@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
   m_Name: 06 - AI
   m_EditorClassIdentifier: 
-  mainDialogue: 
-  successDialogue: 
-  failureDialogue: 
-  isInterviewQuestion: 0
+  mainDialogue: How do you feel about the use of AI in the workplace?
+  successDialogue: Indeed, we should all strive to be useful, like me!
+  failureDialogue: This is very disrespectful against me... I mean against AI.
+  isInterviewQuestion: 1
   interviewTimer: 10
   dialogueEnd: 0
-  reactDialogues: []
-  requiredEmotion: 0
+  reactDialogues:
+  - dialogue: Are you having an AI psychosis??
+    emotion: 6
+    success: 0
+  requiredEmotion: 1
