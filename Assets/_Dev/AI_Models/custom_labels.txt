@@ -1,0 +1,5 @@
+0 Angry
+1 Happy
+2 Shocked
+3 Neutral
+4 Bored
