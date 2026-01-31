@@ -12,6 +12,15 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+# AI Training and Conversion
+/.ai_venv/
+/venv_conv*/
+*.h5
+*.tflite
+/convert_script.py
+/conversion_log.txt
+/[Aa]ssets/AI_Training_Data/
+
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
 *.blend1.meta
