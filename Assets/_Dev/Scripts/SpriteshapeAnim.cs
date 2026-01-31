@@ -34,9 +34,10 @@ public class SpriteshapeAnim : MonoBehaviour
     float currentRightEyeSliderValue;
     int pointCount;
     [SerializeField] bool isMouth, isEyebrow, isEye;
+
     private void Start() 
     { 
-        sliderCount = sliders.Length;
+        
         pointCount = mSpriteShape.spline.GetPointCount();
         
         // Instantiate move points at each spline point position
@@ -74,36 +75,44 @@ public class SpriteshapeAnim : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < sliderCount; i++)
+
+    }
+    public void RandomizeFace()
+    {sliderCount = sliders.Length;
+       
+                for (int i = 0; i < sliderCount; i++)
         {
             if (sliders[i] != null)
             {
-                sliders[i].value = Random.Range(0.2f, 0.8f);
+                sliders[i].value = Random.Range(0.4f, 0.7f);
             }
         }
     }
-   private void FixedUpdate()
+   private void DragPoints()
     {
                 int random = Random.Range(0, 20);
-        if(random >= 15)
+        if(random >= 5)
         {
                   for (int i = 0; i < sliderCount; i++)
         {
             if (sliders[i] != null)
             {
-                var random1 = Random.Range(0, 50);
+                var random1 = Random.Range(0, 100);
                 
                 if(random1 <= 50)
-                    sliders[i].value = sliders[i].value + Random.Range(-0.01f, 0.01f);
+                    sliders[i].value = sliders[i].value + Random.Range(-0.0005f, 0.0005f);
                 else
-                    sliders[i].value = sliders[i].value - Random.Range(-0.01f, 0.01f);
+                    sliders[i].value = sliders[i].value - Random.Range(-0.0005f, 0.0005f);
                 
             }
         }  
         }
     }
+
     private void Update()
     {
+
+        DragPoints();
         if(isMouth)
         {
             UpdateRightMungipa();
