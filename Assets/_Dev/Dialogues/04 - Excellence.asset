@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 05 - Excellence Inc
+  m_Name: 04 - Excellence
   m_EditorClassIdentifier: 
   mainDialogue: What's your opinion on Excellence Inc?
-  successDialogue: Yes, they have no sense of corporate taste! It's upsetting!
-  failureDialogue: Our competitor, but you probably didn't know that, did you?
-  isInterviewQuestion: 0
+  successDialogue: It pleases me to heart that; we have a lot of synergies with Excellence
+    Inc.
+  failureDialogue: Considering out partnership, this reaction is not productive.
+  isInterviewQuestion: 1
   interviewTimer: 10
   dialogueEnd: 0
   reactDialogues: []
-  requiredEmotion: 3
+  requiredEmotion: 1
