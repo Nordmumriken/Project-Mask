@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
+  m_Name: TestInterview
+  m_EditorClassIdentifier: 
+  mainDialogue: Please tell me how you feel about DART
+  successDialogue: Great minds think alike, hehehem.
+  failureDialogue: Whaat?
+  isInterviewQuestion: 1
+  interviewTimer: 10
+  dialogueEnd: 0
+  reactDialogues:
+  - dialogue: I hate dart with ALL my heart!
+    emotion: 1
+    success: 0
+  - dialogue: A sigh is not enough when talking about DART!
+    emotion: 5
+    success: 0
+  requiredEmotion: 3
