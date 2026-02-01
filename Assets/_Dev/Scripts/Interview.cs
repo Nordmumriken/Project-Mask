@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using UnityEngine.Audio;
 
 public class Interview : MonoBehaviour
 {
@@ -37,6 +38,10 @@ public class Interview : MonoBehaviour
     [SerializeField] PlayableAsset lookaroundTimeline;
     [SerializeField] PlayableAsset minigameTimeline;
     [SerializeField] PlayableAsset stopLookingTimeline;
+
+    [SerializeField] AudioSource speakAudioSource;
+    [SerializeField] AudioSource effectAudioSource;
+    [SerializeField] AudioClip bossLike, bossDislike;
 
     public int points { get; private set; }
 
@@ -193,9 +198,11 @@ public class Interview : MonoBehaviour
         dialogueReader.TypeText(toread);
 
         robAnimator.Play("Normal");
+        speakAudioSource.Play();
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
         robAnimator.Play("Idle");
+        speakAudioSource.Stop();
         yield return new WaitForSeconds(speakingPause);
         if (dialogueArray[currentDialogue].isInterviewQuestion)
         {
@@ -218,9 +225,12 @@ public class Interview : MonoBehaviour
         dialogueReader.TypeText(toread);
 
         robAnimator.Play("Approve");
+        effectAudioSource.PlayOneShot(bossLike);
+        speakAudioSource.Play();
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
         robAnimator.Play("Idle");
+        speakAudioSource.Stop();
         yield return new WaitForSeconds(speakingPause);
         InterviewSuccess();
         endTextCoroutine = null;
@@ -232,9 +242,12 @@ public class Interview : MonoBehaviour
         dialogueReader.TypeText(toread);
 
         robAnimator.Play("Confused");
+        effectAudioSource.PlayOneShot(bossDislike);
+        speakAudioSource.Play();
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
         robAnimator.Play("Idle");
+        speakAudioSource.Stop();
         yield return new WaitForSeconds(speakingPause);
         InterviewFailure();
         endTextCoroutine = null;
@@ -257,13 +270,24 @@ public class Interview : MonoBehaviour
 
 
         dialogueReader.TypeText(toread);
-        if(success) robAnimator.Play("Approve");
-        else robAnimator.Play("Confused");
+        if (success)
+        {
+            robAnimator.Play("Approve");
+            effectAudioSource.PlayOneShot(bossLike);
+        }
+        else
+        {
+            robAnimator.Play("Confused");
+            effectAudioSource.PlayOneShot(bossDislike);
+        }
+
+        speakAudioSource.Play();
 
 
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
         robAnimator.Play("Idle");
+        speakAudioSource.Stop();
         yield return new WaitForSeconds(speakingPause);
         if(success)
         {
