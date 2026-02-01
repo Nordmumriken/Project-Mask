@@ -4,16 +4,17 @@ using System.Threading;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-
+using TMPro;
 
 public class Interview : MonoBehaviour
 {
     [SerializeField] Animator robAnimator;
 
     [SerializeField] Slider timerSlider;
+    [SerializeField] TextMeshProUGUI timerText;
 
     [SerializeField] GameObject head;
-
+    [SerializeField] GameObject hideHeadTimeline;
     [SerializeField] DialogueReader dialogueReader;
 
     [SerializeField] Dialogue[] dialogueArray;
@@ -24,7 +25,7 @@ public class Interview : MonoBehaviour
 
     [SerializeField] FacialExpressionScanner facialExpressionScanner;
 
-
+    [SerializeField] CameraScript cameraScript;
     Coroutine interviewTextCoroutine = null;
     Coroutine endTextCoroutine = null;
 
@@ -47,9 +48,12 @@ public class Interview : MonoBehaviour
 
             if(timerStart)
             {
+                timerText.text = "";
+               
                 // Calculate normalized value (starts at 1, goes to 0)
                 timerSlider.value = (timerLength - timer) / timerLength;
 
+                if (timerText != null) timerText.text = "";
                 timer = timerLength;
             }
         }
@@ -57,6 +61,10 @@ public class Interview : MonoBehaviour
         if(timerStart)
         {
             timer += Time.deltaTime;
+
+            float remainingTime = Mathf.Max(0, timerLength - timer);
+            if (timerText != null) timerText.text = remainingTime.ToString("F2");
+            timerSlider.value = (timerLength - timer) / timerLength;
 
             // placeholder for testing
             // add input for speeding up
@@ -83,14 +91,18 @@ public class Interview : MonoBehaviour
             {
                 //check if emotion is done here
                 timerStart = false;
+                if (timerText != null) timerText.text = "";
+              hideHeadTimeline.SetActive(true);
 
                 if (Enum.TryParse(facialExpressionScanner.currentEmotion, true, out Dialogue.Emotion emotion))
                 {
                     EmotionCheck(emotion);
+                    cameraScript.LerpToBossActivate();
                 }
                 else
                 {
                     EmotionCheck(Dialogue.Emotion.Crazy);
+                    cameraScript.LerpToBossActivate();
                 }
 
             }
@@ -130,7 +142,8 @@ public class Interview : MonoBehaviour
         timerSlider.maxValue = 1;
         timerSlider.value = 1;
 
-        head.SetActive(true);
+        cameraScript.LerpToZoomedOutActivate();
+        Invoke("ShowHead", 1.5f);
         timer = 0;
         timerLength = dialogueArray[currentDialogue].interviewTimer;
 
@@ -138,6 +151,16 @@ public class Interview : MonoBehaviour
         if (timerLength <= 0) timerLength = 0.1f;
 
         timerStart = true;
+    }
+
+    void ShowHead()
+    {
+        head.SetActive(true);
+    }
+
+    void HideHead()
+    {
+        head.SetActive(false);
     }
 
     IEnumerator InterviewTextCoroutine()

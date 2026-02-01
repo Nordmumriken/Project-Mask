@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(-10)] // Run before other updates to ensure targets are set
 public class SpriteshapeAnim : MonoBehaviour
 {
     [SerializeField] SpriteShapeController mSpriteShape;
-    Spline mSpline;
     [SerializeField] GameObject movePoint;
     [SerializeField] Transform[] splinePoints;
+    
+    [Header("Sliders")]
     [SerializeField] Slider rightMungipaSlider;
     [SerializeField] Slider leftMungipaSlider;
     [SerializeField] Slider upperLipSlider;
@@ -16,71 +18,42 @@ public class SpriteshapeAnim : MonoBehaviour
     [SerializeField] Slider leftEyebrowSlider;
     [SerializeField] Slider leftEyeSlider;
     [SerializeField] Slider rightEyeSlider;
-    [SerializeField] Vector3 rightMungipaStartPosition;
-    [SerializeField] Vector3 leftMungipaStartPosition;
-    [SerializeField] Vector3 upperLipStartPosition;
-    [SerializeField] Vector3 lowerLipStartPosition;
-    [SerializeField] Vector3 rightEyebrowStartPosition;
-    [SerializeField] Vector3 leftEyebrowStartPosition;
-    [SerializeField] Vector3 leftEyeStartPosition;
-    [SerializeField] Vector3 rightEyeStartPosition;
+    
+    [Header("Start Positions (Local)")]
+    [SerializeField] Vector3[] startLocalPositions;
+    
     [SerializeField] Slider[] sliders;
     int sliderCount;
-    float currentUpperLipSliderValue;
-    float currentLowerLipSliderValue;
-    float currentRightEyebrowSliderValue;
-    float currentLeftEyebrowSliderValue;
-    float currentLeftEyeSliderValue;
-    float currentRightEyeSliderValue;
     int pointCount;
     [SerializeField] bool isMouth, isEyebrow, isEye;
+    [SerializeField] float movementRange = 2f;
 
     private void Start() 
     { 
+        if (mSpriteShape == null) mSpriteShape = GetComponent<SpriteShapeController>();
         
         pointCount = mSpriteShape.spline.GetPointCount();
+        splinePoints = new Transform[pointCount];
+        startLocalPositions = new Vector3[pointCount];
         
         // Instantiate move points at each spline point position
         for (int i = 0; i < pointCount; i++)
         {
-            Vector3 position = mSpriteShape.spline.GetPosition(i);
+            Vector3 localPos = mSpriteShape.spline.GetPosition(i);
             GameObject pointObj = Instantiate(movePoint, transform);
-            pointObj.transform.localPosition = position;
+            pointObj.transform.localPosition = localPos;
             splinePoints[i] = pointObj.transform;
-        }
-        if(isMouth)
-        {
-            rightMungipaStartPosition = splinePoints[2].transform.position;
-            leftMungipaStartPosition = splinePoints[0].transform.position;
-            upperLipStartPosition = splinePoints[1].transform.position;
-            lowerLipStartPosition = splinePoints[3].transform.position;
-        }
-        if(isEyebrow)
-        {
-            rightEyebrowStartPosition = splinePoints[0].transform.position;
-            leftEyebrowStartPosition = splinePoints[2].transform.position;
-        }
-        if(isEye)
-        {
-            leftEyeStartPosition = splinePoints[1].transform.position;
-            rightEyeStartPosition = splinePoints[3].transform.position;
+            startLocalPositions[i] = localPos;
         }
         
-        // Set initial positions
-        for (int i = 0; i < Mathf.Min(pointCount, splinePoints.Length); i++)
-        {
-            if (splinePoints[i] != null)
-            {
-                mSpriteShape.spline.SetPosition(i, splinePoints[i].localPosition);
-            }
-        }
-
-
+        // Sync initial state
+        UpdateSplinePoints();
     }
+
     public void RandomizeFace()
-    {sliderCount = sliders.Length;
-       
-                for (int i = 0; i < sliderCount; i++)
+    {
+        sliderCount = sliders.Length;
+        for (int i = 0; i < sliderCount; i++)
         {
             if (sliders[i] != null)
             {
@@ -88,154 +61,108 @@ public class SpriteshapeAnim : MonoBehaviour
             }
         }
     }
-   private void DragPoints()
+
+    private void DragPoints()
     {
-                int random = Random.Range(0, 20);
+        int random = Random.Range(0, 20);
         if(random >= 5)
         {
-                  for (int i = 0; i < sliderCount; i++)
-        {
-            if (sliders[i] != null)
+            for (int i = 0; i < sliders.Length; i++)
             {
-                var random1 = Random.Range(0, 100);
-                
-                if(random1 <= 50)
-                    sliders[i].value = sliders[i].value + Random.Range(-0.0005f, 0.0005f);
-                else
-                    sliders[i].value = sliders[i].value - Random.Range(-0.0005f, 0.0005f);
-                
-            }
-        }  
+                if (sliders[i] != null)
+                {
+                    var random1 = Random.Range(0, 100);
+                    if(random1 <= 50)
+                        sliders[i].value += Random.Range(-0.0005f, 0.0005f);
+                    else
+                        sliders[i].value -= Random.Range(-0.0005f, 0.0005f);
+                }
+            }  
         }
     }
 
     private void Update()
     {
-
         DragPoints();
+        
         if(isMouth)
         {
-            UpdateRightMungipa();
-            UpdateLeftMungipa();
-            UpdateUpperLip();
-            UpdateLowerLip();
+            UpdateMouth();
         }
         if(isEyebrow)
         {
-            UpdateRightEyebrow();
-            UpdateLeftEyebrow();
+            UpdateEyebrows();
         }
         if(isEye)
         {
-            UpdateLeftEye();
-            UpdateRightEye();
+            UpdateEyes();
         }
 
-        int pointCount = mSpriteShape.spline.GetPointCount();
-        int updateCount = Mathf.Min(pointCount, splinePoints.Length);
-        
-        for (int i = 0; i < updateCount; i++)
+        UpdateSplinePoints();
+    }
+
+    private void UpdateSplinePoints()
+    {
+        for (int i = 0; i < splinePoints.Length; i++)
         {
             if (splinePoints[i] != null)
             {
+                // ALWAYS use localPosition to prevent warping when the parent moves
                 mSpriteShape.spline.SetPosition(i, splinePoints[i].localPosition);
             }
         }
     }
 
-    public void UpdateRightMungipa()
+    private void UpdateMouth()
     {
-        float sliderValue = rightMungipaSlider.value;
-        splinePoints[2].transform.position = new Vector3(
-            splinePoints[2].transform.position.x,
-            Mathf.Lerp(rightMungipaStartPosition.y - 2f, rightMungipaStartPosition.y + 2f, sliderValue),
-            splinePoints[2].transform.position.z
-        );
+        // 0: Left Mouth Corner, 1: Upper Lip, 2: Right Mouth Corner, 3: Lower Lip
+        if (leftMungipaSlider) SetPointY(0, leftMungipaSlider.value, -movementRange, movementRange);
+        if (rightMungipaSlider) SetPointY(2, rightMungipaSlider.value, -movementRange, movementRange);
+
+        // Advanced Lip Clamping (Local Space)
+        // We calculate world-like collisions using local coordinates
+        float lowerLipCurrentLocalY = splinePoints[3].localPosition.y;
+        float upperLipCurrentLocalY = splinePoints[1].localPosition.y;
+
+        if (upperLipSlider) 
+        {
+            float minLocalY = lowerLipCurrentLocalY + 0.1f;
+            SetPointY(1, upperLipSlider.value, -movementRange, movementRange, minLocalY, startLocalPositions[1].y + movementRange);
+        }
+
+        if (lowerLipSlider) 
+        {
+            float maxLocalY = upperLipCurrentLocalY - 0.1f;
+            SetPointY(3, lowerLipSlider.value, -movementRange, movementRange, startLocalPositions[3].y - movementRange, maxLocalY);
+        }
+    }
+    private void UpdateEyebrows()
+    {
+        // 0: Right, 2: Left
+        if (rightEyebrowSlider) SetPointY(0, rightEyebrowSlider.value, -movementRange, movementRange);
+        if (leftEyebrowSlider) SetPointY(2, leftEyebrowSlider.value, -movementRange, movementRange);
     }
 
-    public void UpdateLeftMungipa()
+    private void UpdateEyes()
     {
-        float sliderValue = leftMungipaSlider.value;
-        splinePoints[0].transform.position = new Vector3(
-            splinePoints[0].transform.position.x,
-            Mathf.Lerp(leftMungipaStartPosition.y - 2f, leftMungipaStartPosition.y + 2f, sliderValue),
-            splinePoints[0].transform.position.z
-        );
+        // 1: Left, 3: Right
+        if (leftEyeSlider) SetPointY(1, leftEyeSlider.value, -movementRange, movementRange);
+        if (rightEyeSlider) SetPointY(3, rightEyeSlider.value, -movementRange, movementRange);
     }
 
-    public void UpdateUpperLip()
+    private void SetPointY(int index, float sliderValue, float minOffset, float maxOffset, float absoluteMin = float.MinValue, float absoluteMax = float.MaxValue)
     {
-        float sliderValue = upperLipSlider.value;
-        float minY = lowerLipStartPosition.y + 0.1f; // Keep upper lip slightly above lower lip start
-        float maxY = upperLipStartPosition.y + 2f;
+        if (index >= splinePoints.Length) return;
         
-        float targetY = Mathf.Lerp(upperLipStartPosition.y - 2f, upperLipStartPosition.y + 2f, sliderValue);
-        targetY = Mathf.Clamp(targetY, minY, maxY);
+        Vector3 pos = splinePoints[index].localPosition;
+        float baseY = startLocalPositions[index].y;
         
-        splinePoints[1].transform.position = new Vector3(
-            splinePoints[1].transform.position.x,
-            targetY,
-            splinePoints[1].transform.position.z
-        );
+        // Calculate target Y
+        float targetY = Mathf.Lerp(baseY + minOffset, baseY + maxOffset, sliderValue);
         
-        currentUpperLipSliderValue = sliderValue;
-    }
-
-    public void UpdateLowerLip()
-    {
-        float sliderValue = lowerLipSlider.value;
-        float maxY = upperLipStartPosition.y - 0.1f; // Keep lower lip slightly below upper lip start
-        float minY = lowerLipStartPosition.y - 2f;
+        // Apply clamping (useful for lips)
+        pos.y = Mathf.Clamp(targetY, absoluteMin, absoluteMax);
         
-        float targetY = Mathf.Lerp(lowerLipStartPosition.y - 2f, lowerLipStartPosition.y + 2f, sliderValue);
-        targetY = Mathf.Clamp(targetY, minY, maxY);
-        
-        splinePoints[3].transform.position = new Vector3(
-            splinePoints[3].transform.position.x,
-            targetY,
-            splinePoints[3].transform.position.z
-        );
-        
-        currentLowerLipSliderValue = sliderValue;
-    }
-
-    public void UpdateRightEyebrow()
-    {
-        float sliderValue = rightEyebrowSlider.value;
-        splinePoints[0].transform.position = new Vector3(
-            splinePoints[0].transform.position.x,
-            Mathf.Lerp(rightEyebrowStartPosition.y - 2f, rightEyebrowStartPosition.y + 2f, sliderValue),
-            splinePoints[0].transform.position.z
-        );
-    }
-
-    public void UpdateLeftEyebrow()
-    {
-        float sliderValue = leftEyebrowSlider.value;
-        splinePoints[2].transform.position = new Vector3(
-            splinePoints[2].transform.position.x,
-            Mathf.Lerp(leftEyebrowStartPosition.y - 2f, leftEyebrowStartPosition.y + 2f, sliderValue),
-            splinePoints[2].transform.position.z
-        );
-    }
-
-    public void UpdateLeftEye()
-    {
-        float sliderValue = leftEyeSlider.value;
-        splinePoints[1].transform.position = new Vector3(
-            splinePoints[1].transform.position.x,
-            Mathf.Lerp(leftEyeStartPosition.y - 2f, leftEyeStartPosition.y + 2f, sliderValue),
-            splinePoints[1].transform.position.z
-        );
-    }
-
-    public void UpdateRightEye()
-    {
-        float sliderValue = rightEyeSlider.value;
-        splinePoints[3].transform.position = new Vector3(
-            splinePoints[3].transform.position.x,
-            Mathf.Lerp(rightEyeStartPosition.y - 2f, rightEyeStartPosition.y + 2f, sliderValue),
-            splinePoints[3].transform.position.z
-        );
+        splinePoints[index].localPosition = pos;
     }
 }
