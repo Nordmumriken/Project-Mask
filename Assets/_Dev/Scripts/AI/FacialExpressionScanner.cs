@@ -33,6 +33,7 @@ using System.Collections;
         private Worker worker;
         private RenderTexture targetTexture;
         [SerializeField] TextMeshProUGUI expressionText;
+        [SerializeField] UnityEngine.UI.RawImage displayImage;
 
         [Header("Performance & Smoothing")]
         [Range(0f, 1f)]
@@ -75,6 +76,12 @@ using System.Collections;
             // 3. Setup Render Texture to capture the camera view
             targetTexture = new RenderTexture(inputWidth, inputHeight, 24);
             faceCamera.targetTexture = targetTexture;
+
+            // Update display image if assigned
+            if (displayImage != null)
+            {
+                displayImage.texture = targetTexture;
+            }
             
             Debug.Log("[FacialExpressionScanner] Initialized and ready.");
         }
