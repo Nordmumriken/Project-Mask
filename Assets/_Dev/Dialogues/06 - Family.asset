@@ -15,7 +15,7 @@ MonoBehaviour:
   mainDialogue: What's your opinion on family?
   successDialogue: A stable society requires hard-working families.
   failureDialogue: I can tell you are not a family man...
-  isInterviewQuestion: 0
+  isInterviewQuestion: 1
   interviewTimer: 20
   dialogueEnd: 0
   reactDialogues:

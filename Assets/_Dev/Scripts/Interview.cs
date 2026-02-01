@@ -59,6 +59,7 @@ public class Interview : MonoBehaviour
         mainCam = Camera.main;
         robAnimator.Play("Idle");
         interviewTextCoroutine = StartCoroutine(InterviewTextCoroutine());
+        cameraScript.LerpToBossActivate();
 
     }
     private void Update()

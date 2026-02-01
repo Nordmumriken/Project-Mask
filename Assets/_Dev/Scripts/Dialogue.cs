@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 [CreateAssetMenuAttribute(fileName = "DialogueSO", menuName = "DialogueSO")]
