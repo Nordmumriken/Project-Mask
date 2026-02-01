@@ -5,6 +5,8 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 public class Interview : MonoBehaviour
 {
@@ -13,8 +15,8 @@ public class Interview : MonoBehaviour
     [SerializeField] Slider timerSlider;
     [SerializeField] TextMeshProUGUI timerText;
 
-    [SerializeField] GameObject head;
-    [SerializeField] GameObject hideHeadTimeline;
+    [SerializeField] PlayableDirector head;
+    [SerializeField] PlayableDirector hideHeadTimeline;
     [SerializeField] DialogueReader dialogueReader;
 
     [SerializeField] Dialogue[] dialogueArray;
@@ -23,19 +25,34 @@ public class Interview : MonoBehaviour
 
     [SerializeField] float speakingPause = 3;
 
+    [SerializeField] float lookaroundSpeed;
+
     [SerializeField] FacialExpressionScanner facialExpressionScanner;
 
     [SerializeField] CameraScript cameraScript;
     Coroutine interviewTextCoroutine = null;
     Coroutine endTextCoroutine = null;
+    Coroutine lookaroundCoroutine = null;
+
+    [SerializeField] PlayableAsset hideheadTimeline;
+    [SerializeField] PlayableAsset lookaroundTimeline;
+    [SerializeField] PlayableAsset minigameTimeline;
+    [SerializeField] PlayableAsset stopLookingTimeline;
+
+    public int points { get; private set; }
+
+    Camera mainCam;
 
     float timer;
     float timerLength;
     bool timerStart;
+
+    bool lookingAround;
     Dialogue.Emotion currentEmotion;
 
     private void Start()
     {
+        mainCam = Camera.main;
         robAnimator.Play("Idle");
         interviewTextCoroutine = StartCoroutine(InterviewTextCoroutine());
 
@@ -68,31 +85,21 @@ public class Interview : MonoBehaviour
 
             // placeholder for testing
             // add input for speeding up
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                currentEmotion = Dialogue.Emotion.Happy;
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                currentEmotion = Dialogue.Emotion.Sad;
-            }
-            else if (Input.GetKeyDown(KeyCode.W))
-            {
-                currentEmotion = Dialogue.Emotion.Angry;
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
-            {
-                currentEmotion = Dialogue.Emotion.Shocked;
-            }
+            
+
 
             //
 
             if (timer >= timerLength)
             {
+                if(lookaroundCoroutine != null) StopCoroutine(lookaroundCoroutine);
+                lookaroundCoroutine = null;
+                head.playableAsset = minigameTimeline;
+                hideHeadTimeline.playableAsset = hideheadTimeline;
                 //check if emotion is done here
                 timerStart = false;
                 if (timerText != null) timerText.text = "";
-              hideHeadTimeline.SetActive(true);
+                hideHeadTimeline.Play();
 
                 if (Enum.TryParse(facialExpressionScanner.currentEmotion, true, out Dialogue.Emotion emotion))
                 {
@@ -105,6 +112,26 @@ public class Interview : MonoBehaviour
                     cameraScript.LerpToBossActivate();
                 }
 
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.A))
+                {
+                    lookingAround = true;
+                    if (lookaroundCoroutine == null) lookaroundCoroutine = StartCoroutine(LookaroundCoroutine());
+                    mainCam.transform.position = new Vector3(mainCam.transform.position.x - (Time.deltaTime * lookaroundSpeed), mainCam.transform.position.y, mainCam.transform.position.z);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+
+                    lookingAround = true;
+                    if (lookaroundCoroutine == null) lookaroundCoroutine = StartCoroutine(LookaroundCoroutine());
+                    mainCam.transform.position = new Vector3(mainCam.transform.position.x + (Time.deltaTime * lookaroundSpeed), mainCam.transform.position.y, mainCam.transform.position.z);
+                }
+                else
+                {
+                    lookingAround = false;
+                }
             }
         }
  
@@ -155,20 +182,21 @@ public class Interview : MonoBehaviour
 
     void ShowHead()
     {
-        head.SetActive(true);
+        head.gameObject.SetActive(true);
+        head.Play();
     }
 
-    void HideHead()
-    {
-        head.SetActive(false);
-    }
+    
 
     IEnumerator InterviewTextCoroutine()
     {
         string toread = dialogueArray[currentDialogue].mainDialogue;
         dialogueReader.TypeText(toread);
 
+        robAnimator.Play("Normal");
+
         yield return new WaitUntil(() => dialogueReader.typingFinished);
+        robAnimator.Play("Idle");
         yield return new WaitForSeconds(speakingPause);
         if (dialogueArray[currentDialogue].isInterviewQuestion)
         {
@@ -178,6 +206,7 @@ public class Interview : MonoBehaviour
         {
             //StartCoroutine(DialogueWaitCoroutine());
             NextDialogue();
+            Invoke("InterviewEnd", 10f);
         }
     }
 
@@ -186,9 +215,10 @@ public class Interview : MonoBehaviour
         string toread = dialogueArray[currentDialogue].successDialogue;
         dialogueReader.TypeText(toread);
 
-       
+        robAnimator.Play("Approve");
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
+        robAnimator.Play("Idle");
         yield return new WaitForSeconds(speakingPause);
         InterviewSuccess();
         endTextCoroutine = null;
@@ -199,7 +229,10 @@ public class Interview : MonoBehaviour
         string toread = dialogueArray[currentDialogue].failureDialogue;
         dialogueReader.TypeText(toread);
 
+        robAnimator.Play("Confused");
+
         yield return new WaitUntil(() => dialogueReader.typingFinished);
+        robAnimator.Play("Idle");
         yield return new WaitForSeconds(speakingPause);
         InterviewFailure();
         endTextCoroutine = null;
@@ -222,8 +255,13 @@ public class Interview : MonoBehaviour
 
 
         dialogueReader.TypeText(toread);
+        if(success) robAnimator.Play("Approve");
+        else robAnimator.Play("Confused");
+
+
 
         yield return new WaitUntil(() => dialogueReader.typingFinished);
+        robAnimator.Play("Idle");
         yield return new WaitForSeconds(speakingPause);
         if(success)
         {
@@ -239,12 +277,14 @@ public class Interview : MonoBehaviour
     void InterviewSuccess()
     {
         NextDialogue();
+        points += 1;
         //points +
     }
 
     void InterviewFailure()
     {
         NextDialogue();
+        points -= 1;
         //points -
     }
 
@@ -259,5 +299,23 @@ public class Interview : MonoBehaviour
         yield return new WaitForSeconds(speakingPause);
 
         NextDialogue();
+    }
+
+    IEnumerator LookaroundCoroutine()
+    {
+        if (timer < timerLength) hideHeadTimeline.playableAsset = lookaroundTimeline;
+        if (timer < timerLength) head.playableAsset = stopLookingTimeline;
+
+        if (timer < timerLength) head.Stop();
+        if (hideHeadTimeline.state != PlayState.Playing) hideHeadTimeline.Play();
+        yield return new WaitUntil(() => lookingAround == false || timer >= timerLength);
+        yield return new WaitUntil(() => hideHeadTimeline.state != PlayState.Playing);
+        if (timer < timerLength) ShowHead();
+        lookaroundCoroutine = null;
+    }
+
+    private void InterviewEnd()
+    {
+
     }
 }
