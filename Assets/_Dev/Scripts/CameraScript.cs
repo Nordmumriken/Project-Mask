@@ -4,8 +4,9 @@ public class CameraScript : MonoBehaviour
 {
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform bossTransform;
-    [SerializeField] private float lerpSpeed = 5f;
+    [SerializeField] private float lerpSpeed = 3f;
     public bool lerpToBoss = false;
+    public bool lerpToZoomedOut = false;
     Vector3 zoomedOutPosition;
     Vector3 zoomedInPosition;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,37 +24,39 @@ public class CameraScript : MonoBehaviour
         {
             LerpToBoss();
         }
+        if (lerpToZoomedOut)
+        {
+            LerpToZoomedOut();
+        }
     }
 
     private void LerpToBoss()
     {
-        if (bossTransform == null || cameraTransform == null) return;
+        if (cameraTransform == null) return;
 
-        float threshold = 0.05f;
-        if (Mathf.Abs(cameraTransform.position.x - bossTransform.position.x) < threshold)
+        // Use Vector3.Distance for a more accurate check across all axes
+        if (Vector3.Distance(cameraTransform.position, zoomedInPosition) < 0.01f)
         {
-            cameraTransform.position = new Vector3(zoomedInPosition.x, zoomedInPosition.y, zoomedInPosition.z);
+            cameraTransform.position = zoomedInPosition;
             lerpToBoss = false;
             return;
         }
 
-        float targetX = Mathf.Lerp(cameraTransform.position.x, bossTransform.position.x, lerpSpeed * Time.deltaTime);
-        cameraTransform.position = new Vector3(targetX, zoomedInPosition.y, zoomedInPosition.z);
+        // Lerp the entire position vector for smooth movement in all directions
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomedInPosition, lerpSpeed * Time.deltaTime);
     }   
 
     private void LerpToZoomedOut()
     {
-        if (bossTransform == null || cameraTransform == null) return;
+        if (cameraTransform == null) return;
 
-        float threshold = 0.05f;
-        if (Mathf.Abs(cameraTransform.position.x - bossTransform.position.x) < threshold)
+        if (Vector3.Distance(cameraTransform.position, zoomedOutPosition) < 0.01f)
         {
-            cameraTransform.position = new Vector3(zoomedOutPosition.x, zoomedOutPosition.y, zoomedOutPosition.z);
-            lerpToBoss = false;
+            cameraTransform.position = zoomedOutPosition;
+            lerpToZoomedOut = false;
             return;
         }
 
-        float targetX = Mathf.Lerp(cameraTransform.position.x, bossTransform.position.x, lerpSpeed * Time.deltaTime);
-        cameraTransform.position = new Vector3(targetX, zoomedOutPosition.y, zoomedOutPosition.z);
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomedOutPosition, lerpSpeed * Time.deltaTime);
     }
 }
