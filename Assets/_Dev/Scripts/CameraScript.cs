@@ -14,6 +14,13 @@ public class CameraScript : MonoBehaviour
     {
         zoomedOutPosition = new Vector3(-1.8f, 0f, -9.28f);
         zoomedInPosition = new Vector3(-1.74f, 1.48f, -2.94f);
+
+        // SAFETY: Non-uniform scale on the camera (e.g. 1.1, 1, 1) is the #1 cause of 
+        // child objects "warping" or "shearing" when the camera moves.
+        if (cameraTransform != null)
+        {
+            cameraTransform.localScale = Vector3.one;
+        }
     }
   //zoomed out position boss: -1.8, 0, -9.28
   //zoomed in position boss: -1.74, 1.48, -2.94
@@ -28,6 +35,18 @@ public class CameraScript : MonoBehaviour
         {
             LerpToZoomedOut();
         }
+    }
+
+    public void LerpToBossActivate()
+    {
+        lerpToBoss = true;
+        lerpToZoomedOut = false;
+    }
+
+    public void LerpToZoomedOutActivate()
+    {
+        lerpToZoomedOut = true;
+        lerpToBoss = false;
     }
 
     private void LerpToBoss()
