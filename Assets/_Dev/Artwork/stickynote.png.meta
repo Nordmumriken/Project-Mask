@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      stickynote_0: 3319264181258304774
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
