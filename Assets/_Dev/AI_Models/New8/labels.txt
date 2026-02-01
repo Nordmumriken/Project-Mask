@@ -1,0 +1,7 @@
+0 Neutral
+1 Angry
+2 Happy
+3 Bored
+4 Sad
+5 Shocked
+6 Crazy
