@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Diagnostics;
-using System.Threading;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
@@ -11,6 +9,7 @@ using UnityEngine.Timeline;
 public class Interview : MonoBehaviour
 {
     [SerializeField] Animator robAnimator;
+    [SerializeField] GameObject gameEndScreen;
 
     [SerializeField] Slider timerSlider;
     [SerializeField] TextMeshProUGUI timerText;
@@ -206,7 +205,10 @@ public class Interview : MonoBehaviour
         {
             //StartCoroutine(DialogueWaitCoroutine());
             NextDialogue();
-            Invoke("InterviewEnd", 10f);
+        }
+        else if(dialogueArray[currentDialogue].dialogueEnd)
+        {
+            Invoke("InterviewEnd", 6f);
         }
     }
 
@@ -316,6 +318,6 @@ public class Interview : MonoBehaviour
 
     private void InterviewEnd()
     {
-
+        gameEndScreen.SetActive(true);
     }
 }
