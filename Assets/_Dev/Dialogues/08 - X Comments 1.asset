@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
   m_Name: 08 - X Comments 1
   m_EditorClassIdentifier: 
-  mainDialogue: Back in my day we didn't complain when we needed to work extra. We
-    just did.
+  mainDialogue: Its funny, we got that breakdance sign because it turned people's
+    heads. Finally someone notices the wet floor...
   successDialogue: 
   failureDialogue: 
   isInterviewQuestion: 0
