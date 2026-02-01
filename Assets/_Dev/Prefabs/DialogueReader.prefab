@@ -66,9 +66,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 366b87f818986e84c990bbe8808acd92, type: 2}
   - {fileID: 11400000, guid: 9f680f8ac5df2ab45b089a97fcb7f187, type: 2}
   - {fileID: 11400000, guid: 8f4dd583bcc3b18449b987f53a001a3a, type: 2}
+  - {fileID: 11400000, guid: 3fc2edca079b2724c920702defc375bc, type: 2}
   - {fileID: 11400000, guid: a2eacc64c7dbe784f970aa3b55cafdf2, type: 2}
+  - {fileID: 11400000, guid: ab28c7d3bf8cb6e46851832c9b42ca1e, type: 2}
   - {fileID: 11400000, guid: af0499c5b6f9d6047853e553aaae5db9, type: 2}
-  - {fileID: 11400000, guid: 0082746059160594eb720db6f0483736, type: 2}
+  - {fileID: 11400000, guid: 0b030ed5adcffc847b2fcbc4dd351abb, type: 2}
+  - {fileID: 11400000, guid: c0687f977095680488a4055d5cb1c11b, type: 2}
   - {fileID: 11400000, guid: 98aabeed054c5664dbdfd37fe09cb775, type: 2}
+  - {fileID: 11400000, guid: 07bb9b493e3d0314db83c573e46dbf44, type: 2}
+  - {fileID: 11400000, guid: e76dd833da6de334db1116b4afb9ec85, type: 2}
+  - {fileID: 11400000, guid: 4fa90aafc4d56784e8e215099f24073c, type: 2}
+  - {fileID: 11400000, guid: 3de3879eabf56bc4d92f55715704b062, type: 2}
+  - {fileID: 11400000, guid: f434df6afe0e227448762b5ce62c7162, type: 2}
+  - {fileID: 11400000, guid: 80a4927c2897c344facfdcb78fa62927, type: 2}
   currentDialogue: 0
-  speakingPause: 3
+  speakingPause: 5

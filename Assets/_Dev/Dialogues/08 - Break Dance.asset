@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 00 - Introduction 2
+  m_Name: 08 - Break Dance
   m_EditorClassIdentifier: 
-  mainDialogue: Hmmm, not much of a talker are you?
-  successDialogue: 
-  failureDialogue: 
-  isInterviewQuestion: 0
+  mainDialogue: How about wet floors?
+  successDialogue: 'Aha, you saw the sign didn''t you? '
+  failureDialogue: I'm not sure you understood the joke...
+  isInterviewQuestion: 1
   interviewTimer: 20
   dialogueEnd: 0
-  reactDialogues: []
-  requiredEmotion: 0
+  reactDialogues:
+  - dialogue: Yes, it's reasonable to be scared of falling over.
+    emotion: 4
+    success: 1
+  requiredEmotion: 6

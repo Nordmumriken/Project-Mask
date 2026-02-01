@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 00 - Introduction 2
+  m_Name: 04 - X Comments
   m_EditorClassIdentifier: 
-  mainDialogue: Hmmm, not much of a talker are you?
+  mainDialogue: You won't believe what those people do in their spare time... not
+    work I can tell you!
   successDialogue: 
   failureDialogue: 
   isInterviewQuestion: 0

@@ -30,7 +30,7 @@ public class Dialogue : ScriptableObject
     [SerializeField, TextArea(3, 8)] public string failureDialogue;
 
     [SerializeField] public bool isInterviewQuestion;
-    [SerializeField] public float interviewTimer = 10f;
+    [SerializeField] public float interviewTimer = 20f;
     [SerializeField] public bool dialogueEnd = false;
 
     [SerializeField] public ReactDialogue[] reactDialogues;

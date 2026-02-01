@@ -10,20 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 02 - Stress
+  m_Name: 04 - CorpChat
   m_EditorClassIdentifier: 
-  mainDialogue: Do you get stressed easily?
-  successDialogue: A hard man to read, who can keep his cool. I like that.
-  failureDialogue: I sense a great amount of stress coming from your direction.
+  mainDialogue: What's your opinion on CorpChat Inc?
+  successDialogue: Yes, they have no sense of corporate taste! It's upsetting!
+  failureDialogue: Our main competitor, but you probably didn't know that, did you?
   isInterviewQuestion: 1
   interviewTimer: 20
   dialogueEnd: 0
   reactDialogues:
-  - dialogue: I would hardly be happy about such a thing!
-    emotion: 1
-    success: 0
-  - dialogue: I don't know what you are doing, but at least you are doing it with
-      confidence.
-    emotion: 6
+  - dialogue: Disinterest is perfectly fine for such a mediocre company.
+    emotion: 0
     success: 1
-  requiredEmotion: 0
+  - dialogue: Shocking indeed; I hear they have no taste in interior design!
+    emotion: 4
+    success: 1
+  requiredEmotion: 3

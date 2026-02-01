@@ -10,13 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 00 - Introduction 2
+  m_Name: 06 - Family
   m_EditorClassIdentifier: 
-  mainDialogue: Hmmm, not much of a talker are you?
-  successDialogue: 
-  failureDialogue: 
+  mainDialogue: What's your opinion on family?
+  successDialogue: A stable society requires hard-working families.
+  failureDialogue: I can tell you are not a family man...
   isInterviewQuestion: 0
   interviewTimer: 20
   dialogueEnd: 0
-  reactDialogues: []
-  requiredEmotion: 0
+  reactDialogues:
+  - dialogue: Such disinterest in something so important!
+    emotion: 5
+    success: 0
+  - dialogue: I see, perhaps your lack of family has given you this crazy energy...
+    emotion: 6
+    success: 1
+  requiredEmotion: 1

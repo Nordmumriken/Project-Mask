@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 05 - CorpChat
+  m_Name: 03 - X Comments 2
   m_EditorClassIdentifier: 
-  mainDialogue: What's your opinion on CorpChat Inc?
-  successDialogue: Yes, they have no sense of corporate taste! It's upsetting!
-  failureDialogue: Our main competitor, but you probably didn't know that, did you?
-  isInterviewQuestion: 1
-  interviewTimer: 10
+  mainDialogue: I've only narrowly avoided several dart attacks throughout my tenure
+    here!
+  successDialogue: 
+  failureDialogue: 
+  isInterviewQuestion: 0
+  interviewTimer: 20
   dialogueEnd: 0
   reactDialogues: []
-  requiredEmotion: 3
+  requiredEmotion: 0

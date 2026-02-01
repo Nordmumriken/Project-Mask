@@ -16,10 +16,10 @@ MonoBehaviour:
   successDialogue: An enthusiastic individual, are you? Good.
   failureDialogue: This is hardly appropriate in an office.
   isInterviewQuestion: 1
-  interviewTimer: 10
+  interviewTimer: 20
   dialogueEnd: 0
   reactDialogues:
-  - dialogue: Silence is does not speak.
+  - dialogue: Silence does not speak.
     emotion: 0
     success: 0
   requiredEmotion: 1

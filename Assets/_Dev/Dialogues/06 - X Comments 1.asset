@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 04 - Excellence
+  m_Name: 06 - X Comments 1
   m_EditorClassIdentifier: 
-  mainDialogue: What's your opinion on Excellence Inc?
-  successDialogue: It pleases me to heart that; we have a lot of synergies with Excellence
-    Inc.
-  failureDialogue: Considering out partnership, this reaction is not productive.
-  isInterviewQuestion: 1
-  interviewTimer: 10
+  mainDialogue: 'Few things can motivate oneself to work hard as much as family can. '
+  successDialogue: 
+  failureDialogue: 
+  isInterviewQuestion: 0
+  interviewTimer: 20
   dialogueEnd: 0
   reactDialogues: []
-  requiredEmotion: 1
+  requiredEmotion: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   successDialogue: 
   failureDialogue: 
   isInterviewQuestion: 0
-  interviewTimer: 10
+  interviewTimer: 20
   dialogueEnd: 0
   reactDialogues: []
   requiredEmotion: 0

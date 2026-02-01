@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
+  m_Name: 07 - Paid Overtime
+  m_EditorClassIdentifier: 
+  mainDialogue: 'That leads me to the question: What''s your opinion on paid overtime?'
+  successDialogue: Good, I see you admire the craft, not just the earnings.
+  failureDialogue: Only working for money could hardly be called... loyalty.
+  isInterviewQuestion: 1
+  interviewTimer: 20
+  dialogueEnd: 0
+  reactDialogues:
+  - dialogue: Bored? That's hardly a good attitude, even if you don't get paid!
+    emotion: 5
+    success: 0
+  - dialogue: Bored? That's hardly a good attitude, even if you don't get paid!
+    emotion: 0
+    success: 0
+  - dialogue: Yes, the concept is shocking if not even horriifying!
+    emotion: 4
+    success: 1
+  requiredEmotion: 2

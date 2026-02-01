@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ecb97696f92164faeb5713290b711d, type: 3}
-  m_Name: 00 - Introduction 2
+  m_Name: 02 - X Comments 1
   m_EditorClassIdentifier: 
-  mainDialogue: Hmmm, not much of a talker are you?
+  mainDialogue: Keeping your cool is essential if you want to engage in our company
+    water cooler conversations.
   successDialogue: 
   failureDialogue: 
   isInterviewQuestion: 0

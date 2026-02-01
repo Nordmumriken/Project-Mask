@@ -8,7 +8,7 @@ public class DialogueReader : MonoBehaviour
 {
     [SerializeField] float typingSpeed;
 
-    [SerializeField] TextMeshProUGUI dialougeUIText;
+    [SerializeField] TextMeshProUGUI dialogueUIText;
 
     [SerializeField] AudioSource speakingSource;
 
@@ -23,11 +23,11 @@ public class DialogueReader : MonoBehaviour
     IEnumerator TypeTextCoroutine(string sentence)
     {
         //dialogueVoice.Pronounce(sentence);
-        dialougeUIText.text = "";
+        dialogueUIText.text = "";
         string voiceText = "";
         foreach (char letter in sentence.ToCharArray())
         {
-            dialougeUIText.text += letter;
+            dialogueUIText.text += letter;
             if (letter == ' ' || letter == '.' || letter == '?' || letter == '!' || letter == ';' || letter == ':')
             {
 
@@ -62,7 +62,7 @@ public class DialogueReader : MonoBehaviour
         {
             StopAllCoroutines();
             typingFinished = true;
-            dialougeUIText.text = currentText;
+            dialogueUIText.text = currentText;
         }
     }
 
